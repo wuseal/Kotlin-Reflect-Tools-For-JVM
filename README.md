@@ -3,24 +3,25 @@
 [![license](https://img.shields.io/github/license/wuseal/Kotlin-Reflect-Tools-For-JVM.svg)](https://github.com/wuseal/JsonToKotlinClass/blob/master/LICENSE)
 # Kotlin-Reflect-Tools-For-JVM
 
-##OverView
+## OverView
 This is a tool library for Kotlin to use reflect APIs in Kotlin simply method.It can modify or read the top level private visible property value in Kotlin way.
  
- ##Usage
- * add jcenter repository in your model build gradle:
+ ## Usage
+ * Add jcenter repository in your model build gradle:
    ```groovy
     repositories {
        jcenter()
     }
     ```
     
- * apply library in dependency config:
+ * Apply library in dependency config:
  
     ```groovy
        compile 'wu.seal:kotlin-reflect-tools-for-jvm:1.0.0'
     ```
     
-##APIs
+## APIs
+
 |Method         | Describe          |
 | ------------- |:-------------:| 
 |changeTopPropertyValue | change the top level property value |
@@ -35,7 +36,7 @@ This is a tool library for Kotlin to use reflect APIs in Kotlin simply method.It
 
 All method don't care what the property or method visibility it is 
 
-##Demo
+## Demo
 For example a Kotlin file like this:
 ```kotlin
 val topName = "topSeal"
@@ -103,10 +104,10 @@ Then we could do these :
 
 To see more usage cases ,you can have a look at the test case in project.
 
-##Others
+## Others
 * Welcome to raise any issue.
-* welcome to push a pull request 
+* Welcome to push a pull request 
 
 
-##Find me useful ? :heart:
+## Find me useful ? :heart:
 * Support me by clicking the :star: button on the upper right of this page. :v:
