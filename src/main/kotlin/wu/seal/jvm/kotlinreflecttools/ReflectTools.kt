@@ -245,7 +245,7 @@ fun getTopPropertyValueByName(otherCallableReference: CallableReference, propert
 /**
  * invoke a method by name from a classObj,no matter whether the property is public ,private or internal
  */
-fun invokeMethodByMethodName(classObj: Any, methodName: String, vararg methodArgs: Any?): Any? {
+fun invokeClassMethodByMethodName(classObj: Any, methodName: String, vararg methodArgs: Any?): Any? {
     val containerClass: Class<*> = classObj::class.java
 
     containerClass.declaredMethods.forEach { method ->

@@ -111,7 +111,7 @@ class ReflectToolsKtTest {
     fun invokeMethodByMethodName() {
         val demoObj = TestDemo()
         val expectedObjMethodValue = true
-        val getMethodValue = invokeMethodByMethodName(demoObj, "isMan")
+        val getMethodValue = invokeClassMethodByMethodName(demoObj, "isMan")
 
         assertEquals(expectedObjMethodValue, getMethodValue)
 
