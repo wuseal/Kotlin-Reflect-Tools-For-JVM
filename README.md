@@ -31,7 +31,7 @@ This is a tool library for Kotlin to use reflect APIs in Kotlin simply method.It
 | changeClassPropertyValueByName | change the class inner property name by property name     |
 | changeClassPropertyValueByNameIgnoreType | change the class inner property value to any other type of value     |
 | getClassPropertyValueByName | get the class inner property value by property name   |
-| invokeTopMethodByMethodName | get the top level method with method name     |
+| invokeTopMethodByMethodName | invoke the top level method with method name     |
 | invokeMethodByMethodName | invoke any method with method name     |
 
 All method don't care what the property or method visibility it is 
