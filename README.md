@@ -99,6 +99,35 @@ Then we could do these :
         changeClassPropertyValueByName(demoObj, "name", newValue)
         assertEquals(newValue, getClassPropertyValueByName(demoObj, "name"))
     }
+    
+    @org.junit.Test
+    fun changeTopPropertyValueByName() {
+
+        val targetName = "fashionSeal"
+        assertNotEquals(targetName, topName)
+        changeTopPropertyValueByName(::topName as CallableReference, "topName", targetName)
+        assertEquals(targetName, topName)
+
+        val targetAgeName = "newName"
+        assertNotEquals(targetAgeName, getTopPropertyValueByName(::topName as CallableReference, "topAgeName"))
+        changeTopPropertyValueByName(::topName as CallableReference, "topAgeName", targetAgeName)
+        assertEquals(targetAgeName, getTopPropertyValueByName(::topName as CallableReference, "topAgeName"))
+
+        val targetAge = 18
+        assertNotEquals(targetAge, getTopPropertyValueByName(::topName as CallableReference, "topAge"))
+        changeTopPropertyValueByName(::topName as CallableReference, "topAge", targetAge)
+        assertEquals(targetAge, getTopPropertyValueByName(::topName as CallableReference, "topAge"))
+    }
+    
+    @org.junit.Test
+    fun invokeMethodByMethodName() {
+        val demoObj = TestDemo()
+        val expectedObjMethodValue = true
+        val getMethodValue = invokeClassMethodByMethodName(demoObj, "isMan")
+
+        assertEquals(expectedObjMethodValue, getMethodValue)
+
+    }
 
 ```
 
