@@ -4,7 +4,7 @@
 # Kotlin-Reflect-Tools-For-JVM
 
 ## OverView
-This is a tool library for Kotlin to use reflect APIs in Kotlin simply method.It can modify or read the top level private visible property value in Kotlin way.
+This is a tool library for Kotlin to use java reflect APIs in Kotlin simply method.It can modify or read the top level private visible property value in Kotlin way.
  
  ## Usage
  * Add jcenter repository in your moduel build gradle:
