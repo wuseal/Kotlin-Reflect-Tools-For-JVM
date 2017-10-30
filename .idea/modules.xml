@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/kotlin-reflect-tools-for-jvm.iml" filepath="$PROJECT_DIR$/.idea/modules/kotlin-reflect-tools-for-jvm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/kotlin-reflect-tools-for-jvm_main.iml" filepath="$PROJECT_DIR$/.idea/modules/kotlin-reflect-tools-for-jvm_main.iml" group="kotlin-reflect-tools-for-jvm" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/kotlin-reflect-tools-for-jvm_test.iml" filepath="$PROJECT_DIR$/.idea/modules/kotlin-reflect-tools-for-jvm_test.iml" group="kotlin-reflect-tools-for-jvm" />
+    </modules>
+  </component>
+</project>
