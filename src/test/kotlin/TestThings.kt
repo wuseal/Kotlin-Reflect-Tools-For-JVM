@@ -15,6 +15,27 @@ private fun nextTopAge(): Int {
 }
 
 
+private fun doubleAgeAndPrint(age: Int):Int {
+    val doubleAge = age*2
+    println("double age = $doubleAge")
+    return doubleAge
+}
+
+private fun plusTwoAge(age1: Int, age2: Int):Int {
+    val plusAge = age1 + age2
+    println("plus age = $plusAge")
+
+    return plusAge
+}
+
+
+private fun plusNameAndAge(name: String, age2: Int):String {
+    val plusNameAndAge = name + age2
+    println("plusNameAndAge = $plusNameAndAge")
+
+    return plusNameAndAge
+}
+
 val funPropertyPlusAge: (Int) -> Int = { age -> age + 1 }
 
 val funPropertyReduceAge: (Int) -> Int = { age -> age - 1 }

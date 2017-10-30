@@ -19,7 +19,7 @@ apply plugin: 'maven-publish'
 sourceCompatibility = 1.8
 
 group 'wu.seal'
-version '1.0.0'
+version '1.0.1'
 repositories {
     jcenter()
     mavenCentral()
@@ -54,10 +54,10 @@ bintray {
         licenses = ['Apache-2.0']
         vcsUrl = 'https://github.com/wuseal/Kotlin-Reflect-Tools-For-JVM'
         version {
-            name = '1.0.0'
+            name = '1.0.1'
             desc = 'First version commit'
             released = new Date()
-            vcsTag = '1.0.0'
+            vcsTag = '1.0.1'
         }
     }
 }

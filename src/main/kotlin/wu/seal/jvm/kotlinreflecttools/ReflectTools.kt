@@ -256,7 +256,8 @@ fun invokeMethodByMethodName(classObj: Any, methodName: String, vararg methodArg
             modifyFiled.setInt(method, modifyFiled.getInt(method) and Modifier.FINAL.inv())
 
             if (methodArgs.isNotEmpty()) {
-                return method.invoke(classObj, methodArgs)
+
+                return method.invoke(classObj, *methodArgs)
             } else {
                 return method.invoke(classObj)
             }
@@ -284,7 +285,7 @@ fun invokeTopMethodByMethodName(otherCallableReference: CallableReference, metho
             modifyFiled.setInt(method, modifyFiled.getInt(method) and Modifier.FINAL.inv())
 
             if (methodArgs.isNotEmpty()) {
-                return method.invoke(null, methodArgs)
+                return method.invoke(null, *methodArgs)
             } else {
                 return method.invoke(null)
             }

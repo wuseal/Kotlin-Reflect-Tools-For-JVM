@@ -17,12 +17,12 @@ This is a tool library for Kotlin to use reflect APIs in Kotlin simply method.It
  * apply library in dependency config:
  
     ```groovy
-       compile 'wu.seal:kotlin-reflect-tools-for-jvm:1.0.0'
+       compile 'wu.seal:kotlin-reflect-tools-for-jvm:1.0.1'
     ```
     
 ##APIs
 |Method         | Describe          |
-| ------------- |:-------------:| 
+| ------------- |:-------------| 
 |changeTopPropertyValue | change the top level property value |
 | changeTopPropertyValueByName | change the top leve property name by porpery name     |
 | getTopPropertyValueByName | get the top level property value by property name     |

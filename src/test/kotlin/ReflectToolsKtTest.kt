@@ -127,6 +127,22 @@ class ReflectToolsKtTest {
 
         assertEquals(expectedPreTopAge, invokeMethodPreTopAgeValue)
         assertEquals(expectedNextTopAge, invokeMethodNextTopAgeValue)
+
+
+        val testAge = 10
+        val invokeMethodDoubleAge = invokeTopMethodByMethodName(::topName as CallableReference, "doubleAgeAndPrint", *arrayOf(testAge))
+        assertEquals(testAge * 2, invokeMethodDoubleAge)
+
+        val testAge1 = 10
+        val testAg2 = 13
+        val invokeMethodPlusAge = invokeTopMethodByMethodName(::topName as CallableReference, "plusTwoAge", testAge1, testAg2)
+        assertEquals(testAge1 + testAg2, invokeMethodPlusAge)
+
+
+        val testName = "Seal"
+        val testAg3 = 18
+        val invokeMethodPlusNameAge = invokeTopMethodByMethodName(::topName as CallableReference, "plusNameAndAge", testName, testAg3)
+        assertEquals(testName + testAg3, invokeMethodPlusNameAge)
     }
 
 
