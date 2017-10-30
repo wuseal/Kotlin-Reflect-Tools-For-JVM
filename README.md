@@ -10,7 +10,7 @@ This is a tool library for Kotlin to use reflect APIs in Kotlin simply method.It
  * Add jcenter repository in your moduel build gradle:
    ```groovy
     repositories {
-       jcenter()
+        maven { url  "https://dl.bintray.com/wusealking/maven" }
     }
     ```
     
