@@ -1,6 +1,6 @@
 [![Bintray](https://img.shields.io/bintray/v/wusealking/maven/wu.seal.jvm.kotlinreflecttools.svg)](https://bintray.com/wusealking/maven/wu.seal.jvm.kotlinreflecttools#)
-[![GitHub stars](https://img.shields.io/github/stars/wuseal/Kotlin-Reflect-Tools-For-JVM.svg?style=social&label=Stars&style=plastic)](https://github.com/wuseal/JsonToKotlinClass/stargazers)
-[![license](https://img.shields.io/github/license/wuseal/Kotlin-Reflect-Tools-For-JVM.svg)](https://github.com/wuseal/JsonToKotlinClass/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/wuseal/Kotlin-Reflect-Tools-For-JVM.svg?style=social&label=Stars&style=plastic)](https://github.com/wuseal/Kotlin-Reflect-Tools-For-JVM/stargazers)
+[![license](https://img.shields.io/github/license/wuseal/Kotlin-Reflect-Tools-For-JVM.svg)](https://github.com/wuseal/Kotlin-Reflect-Tools-For-JVM/blob/master/LICENSE)
 # Kotlin-Reflect-Tools-For-JVM
 
 ## OverView
