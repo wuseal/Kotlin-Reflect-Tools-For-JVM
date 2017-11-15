@@ -5,6 +5,9 @@
 Related Project: [Kotlin-Reflect-Tools-For-Android](https://github.com/wuseal/Kotlin-Reflect-Tools-For-Android)
 ## OverView
 This is a tool library for Kotlin to use java reflect APIs in Kotlin simply method.It can modify or read the top level private visible property value in Kotlin way.
+* Note: This tools only availible for JVM not fit for android platform ,If you use on Android platform, Please use
+
+  [Kotlin-Reflect-Tools-For-Android](https://github.com/wuseal/Kotlin-Reflect-Tools-For-Android)
  
  ## Usage
  * Add jcenter repository in your moduel build gradle:
