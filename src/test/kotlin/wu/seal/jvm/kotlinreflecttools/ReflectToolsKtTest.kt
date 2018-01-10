@@ -1,6 +1,7 @@
+package wu.seal.jvm.kotlinreflecttools
+
 import org.junit.Assert.*
 import kotlin.jvm.internal.CallableReference
-import wu.seal.jvm.kotlinreflecttools.*
 
 /**
  * test case
