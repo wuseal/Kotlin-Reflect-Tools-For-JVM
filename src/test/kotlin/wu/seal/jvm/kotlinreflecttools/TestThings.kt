@@ -11,6 +11,7 @@ private val topAge = 666
 private val topAgeName = "666"
 
 private fun gotIt() = true
+private fun gotIt(boolean: Boolean) = boolean
 private fun preTopAge(): Int {
     return funPropertyReduceAge(topAge)
 }
@@ -55,6 +56,14 @@ class TestDemo {
 
     private fun isMan(): Boolean {
         return true
+    }
+
+    private fun isMan(boolean: Boolean) :Boolean{
+        return boolean
+    }
+
+    private fun isMan(double: Double) :Boolean{
+        return double==0.0
     }
 
     fun nextAge(): Int {

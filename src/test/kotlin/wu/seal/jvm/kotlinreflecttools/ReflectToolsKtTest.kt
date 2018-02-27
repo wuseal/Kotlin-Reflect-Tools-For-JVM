@@ -1,6 +1,8 @@
 package wu.seal.jvm.kotlinreflecttools
 
+import com.winterbe.expekt.should
 import org.junit.Assert.*
+import org.junit.Test
 import kotlin.jvm.internal.CallableReference
 
 /**
@@ -144,6 +146,50 @@ class ReflectToolsKtTest {
         val testAg3 = 18
         val invokeMethodPlusNameAge = invokeTopMethodByMethodName(::topName as CallableReference, "plusNameAndAge", testName, testAg3)
         assertEquals(testName + testAg3, invokeMethodPlusNameAge)
+    }
+
+
+    @Test
+    fun invokeMethodByMethodNameWithDifferentArguments() {
+        val demoObj = TestDemo()
+        val expectedObjMethodValue = false
+        val getMethodValue = invokeClassMethodByMethodName(demoObj, "isMan", expectedObjMethodValue)
+        getMethodValue.should.be.equal(expectedObjMethodValue)
+
+        val args = 0.1
+        val getOtherTypeArgMethodValue = invokeClassMethodByMethodName(demoObj, "isMan", args) as Boolean
+        getOtherTypeArgMethodValue.should.be.`false`
+
+    }
+
+    @Test
+    fun invokeMethodByMethodNameWithWrongArguments() {
+        val demoObj = TestDemo()
+        val expectedObjMethodValue = false
+
+        val returnValue = try {
+            invokeClassMethodByMethodName(demoObj, "isMan", "") as Boolean?
+        } catch (e: Exception) {
+            false
+        }
+        expectedObjMethodValue.should.be.equal(returnValue)
+
+    }
+
+    @Test
+    fun invokeTopMethodByMethodNameWithDifferentArguments() {
+        var result = invokeTopMethodByMethodName(::topName as CallableReference, "gotIt")
+        result.should.be.equal(true)
+
+        result = invokeTopMethodByMethodName(::topName as CallableReference, "gotIt", false)
+        result.should.be.equal(false)
+
+        result= try {
+            invokeTopMethodByMethodName(::topName as CallableReference, "gotIt", "Wrong")
+        } catch (e: Exception) {
+            "Wrong"
+        }
+        result.should.be.equal("Wrong")
     }
 
 
