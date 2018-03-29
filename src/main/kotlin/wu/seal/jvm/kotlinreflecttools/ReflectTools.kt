@@ -17,20 +17,21 @@ import kotlin.reflect.KProperty
  *
  */
 fun <R> changeTopPropertyValue(property: KProperty<R>, newValue: R): Boolean =
-        changePropertyValue(null, property, newValue)
+    changePropertyValue(null, property, newValue)
 
 /**
  * change the property value with new value int the special KProperty inside a  class level ,not the property not in any class
  */
 fun <R> changeClassPropertyValue(classObj: Any, property: KProperty<R>, newValue: R): Boolean =
-        changePropertyValue(classObj, property, newValue)
+    changePropertyValue(classObj, property, newValue)
 
 private fun <R> changePropertyValue(classObj: Any?, property: KProperty<R>, newValue: R): Boolean {
     val owner = (property as PropertyReference).owner
     val propertyName = property.name
     val containerClass: Class<*>
     try {
-        containerClass = (owner!!::class.members as ArrayList).firstOrNull { it.name == "jClass" }?.call(owner) as Class<*>
+        containerClass =
+                (owner!!::class.members as ArrayList).firstOrNull { it.name == "jClass" }?.call(owner) as Class<*>
     } catch (e: Exception) {
         throw IllegalArgumentException("No such property 'jClass'")
     }
@@ -76,7 +77,8 @@ fun changeTopPropertyValueByName(otherCallableReference: CallableReference, prop
     val owner = otherCallableReference.owner
     val containerClass: Class<*>
     try {
-        containerClass = (owner!!::class.members as ArrayList).firstOrNull { it.name == "jClass" }?.call(owner) as Class<*>
+        containerClass =
+                (owner!!::class.members as ArrayList).firstOrNull { it.name == "jClass" }?.call(owner) as Class<*>
     } catch (e: Exception) {
         throw IllegalArgumentException("No such property 'jClass'")
     }
@@ -145,36 +147,36 @@ fun <R> changeClassPropertyValueByNameIgnoreType(classObj: Any, propertyName: St
                 changeClassPropertyValueByName(root, "type", (newValue as Any)::class.java)
             }
             val clazz =
-                    if (Modifier.isStatic(field.modifiers)) {
-                        when ((newValue as Any)::class.java) {
-                            Int::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticIntegerFieldAccessorImpl")
-                            Int::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedStaticIntegerFieldAccessorImpl")
-                            Long::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticLongFieldAccessorImpl")
-                            Int::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedStaticLongFieldAccessorImpl")
-                            Double::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticDoubleFieldAccessorImpl")
-                            Double::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedStaticDoubleFieldAccessorImpl")
-                            Float::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticFloatFieldAccessorImpl")
-                            Float::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedStaticFloatFieldAccessorImpl")
-                            Boolean::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticBooleanFieldAccessorImpl")
-                            Boolean::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedStaticBooleanFieldAccessorImpl")
-                            else -> Class.forName("sun.reflect.UnsafeQualifiedStaticObjectFieldAccessorImpl")
-                        }
-                    } else {
-                        when ((newValue as Any)::class.java) {
-                            Int::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedIntegerFieldAccessorImpl")
-                            Int::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedIntegerFieldAccessorImpl")
-                            Long::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedLongFieldAccessorImpl")
-                            Int::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedLongFieldAccessorImpl")
-                            Double::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedDoubleFieldAccessorImpl")
-                            Double::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedDoubleFieldAccessorImpl")
-                            Float::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedFloatFieldAccessorImpl")
-                            Float::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedFloatFieldAccessorImpl")
-                            Boolean::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedBooleanFieldAccessorImpl")
-                            Boolean::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedBooleanFieldAccessorImpl")
-                            else -> Class.forName("sun.reflect.UnsafeQualifiedObjectFieldAccessorImpl")
-                        }
-
+                if (Modifier.isStatic(field.modifiers)) {
+                    when ((newValue as Any)::class.java) {
+                        Int::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticIntegerFieldAccessorImpl")
+                        Int::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedStaticIntegerFieldAccessorImpl")
+                        Long::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticLongFieldAccessorImpl")
+                        Int::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedStaticLongFieldAccessorImpl")
+                        Double::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticDoubleFieldAccessorImpl")
+                        Double::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedStaticDoubleFieldAccessorImpl")
+                        Float::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticFloatFieldAccessorImpl")
+                        Float::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedStaticFloatFieldAccessorImpl")
+                        Boolean::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticBooleanFieldAccessorImpl")
+                        Boolean::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedStaticBooleanFieldAccessorImpl")
+                        else -> Class.forName("sun.reflect.UnsafeQualifiedStaticObjectFieldAccessorImpl")
                     }
+                } else {
+                    when ((newValue as Any)::class.java) {
+                        Int::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedIntegerFieldAccessorImpl")
+                        Int::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedIntegerFieldAccessorImpl")
+                        Long::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedLongFieldAccessorImpl")
+                        Int::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedLongFieldAccessorImpl")
+                        Double::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedDoubleFieldAccessorImpl")
+                        Double::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedDoubleFieldAccessorImpl")
+                        Float::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedFloatFieldAccessorImpl")
+                        Float::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedFloatFieldAccessorImpl")
+                        Boolean::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedBooleanFieldAccessorImpl")
+                        Boolean::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedBooleanFieldAccessorImpl")
+                        else -> Class.forName("sun.reflect.UnsafeQualifiedObjectFieldAccessorImpl")
+                    }
+
+                }
             val constructor = clazz.declaredConstructors[0]
             constructor.isAccessible = true
 
@@ -219,7 +221,8 @@ fun getTopPropertyValueByName(otherCallableReference: CallableReference, propert
     val owner = otherCallableReference.owner
     val containerClass: Class<*>
     try {
-        containerClass = (owner!!::class.members as ArrayList).firstOrNull { it.name == "jClass" }?.call(owner) as Class<*>
+        containerClass =
+                (owner!!::class.members as ArrayList).firstOrNull { it.name == "jClass" }?.call(owner) as Class<*>
     } catch (e: Exception) {
         throw IllegalArgumentException("No such property 'jClass'")
     }
@@ -262,7 +265,7 @@ fun invokeClassMethodByMethodName(classObj: Any, methodName: String, vararg meth
                 } else {
                     return method.invoke(classObj)
                 }
-            } catch(e: Exception) {
+            } catch (e: Exception) {
                 return@forEach
             }
         }
@@ -273,11 +276,16 @@ fun invokeClassMethodByMethodName(classObj: Any, methodName: String, vararg meth
 /**
  * invoke a method by name from a kotlin file(not in any kotlin class),no matter whether the property is public ,private or internal
  */
-fun invokeTopMethodByMethodName(otherCallableReference: CallableReference, methodName: String, vararg methodArgs: Any?): Any? {
+fun invokeTopMethodByMethodName(
+    otherCallableReference: CallableReference,
+    methodName: String,
+    vararg methodArgs: Any?
+): Any? {
     val owner = otherCallableReference.owner
     val containerClass: Class<*>
     try {
-        containerClass = (owner!!::class.members as ArrayList).firstOrNull { it.name == "jClass" }?.call(owner) as Class<*>
+        containerClass =
+                (owner!!::class.members as ArrayList).firstOrNull { it.name == "jClass" }?.call(owner) as Class<*>
     } catch (e: Exception) {
         throw IllegalArgumentException("No such property 'jClass'")
     }
@@ -294,7 +302,7 @@ fun invokeTopMethodByMethodName(otherCallableReference: CallableReference, metho
                 } else {
                     return method.invoke(null)
                 }
-            } catch(e: Exception) {
+            } catch (e: Exception) {
                 return@forEach
             }
         }
