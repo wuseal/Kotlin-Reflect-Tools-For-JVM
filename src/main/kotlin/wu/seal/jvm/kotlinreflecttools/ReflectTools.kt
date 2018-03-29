@@ -17,13 +17,13 @@ import kotlin.reflect.KProperty
  *
  */
 fun <R> changeTopPropertyValue(property: KProperty<R>, newValue: R): Boolean =
-    changePropertyValue(null, property, newValue)
+        changePropertyValue(null, property, newValue)
 
 /**
  * change the property value with new value int the special KProperty inside a  class level ,not the property not in any class
  */
 fun <R> changeClassPropertyValue(classObj: Any, property: KProperty<R>, newValue: R): Boolean =
-    changePropertyValue(classObj, property, newValue)
+        changePropertyValue(classObj, property, newValue)
 
 private fun <R> changePropertyValue(classObj: Any?, property: KProperty<R>, newValue: R): Boolean {
     val owner = (property as PropertyReference).owner
@@ -35,17 +35,25 @@ private fun <R> changePropertyValue(classObj: Any?, property: KProperty<R>, newV
     } catch (e: Exception) {
         throw IllegalArgumentException("No such property 'jClass'")
     }
-    containerClass.declaredFields.forEach { field ->
-        if (field.name == propertyName) {
-            field.isAccessible = true
-            val modifyFiled = field.javaClass.getDeclaredField("modifiers")
-            modifyFiled.isAccessible = true
-            modifyFiled.setInt(field, modifyFiled.getInt(field) and Modifier.FINAL.inv())
+    var tobeSearchMethodClass: Class<*>? = containerClass
 
-            field.set(classObj, newValue)
-            return true
+    while (tobeSearchMethodClass != null) {
+
+        tobeSearchMethodClass.declaredFields.forEach { field ->
+            if (field.name == propertyName) {
+                field.isAccessible = true
+                val modifyFiled = field.javaClass.getDeclaredField("modifiers")
+                modifyFiled.isAccessible = true
+                modifyFiled.setInt(field, modifyFiled.getInt(field) and Modifier.FINAL.inv())
+
+                field.set(classObj, newValue)
+                return true
+            }
         }
+
+        tobeSearchMethodClass = tobeSearchMethodClass.superclass
     }
+
     return false
 }
 
@@ -55,16 +63,23 @@ private fun <R> changePropertyValue(classObj: Any?, property: KProperty<R>, newV
 fun <R> changeClassPropertyValueByName(classObj: Any, propertyName: String, newValue: R): Boolean {
     val containerClass: Class<*> = classObj::class.java
 
-    containerClass.declaredFields.forEach { field ->
-        if (field.name == propertyName) {
-            field.isAccessible = true
-            val modifyFiled = field.javaClass.getDeclaredField("modifiers")
-            modifyFiled.isAccessible = true
-            modifyFiled.setInt(field, modifyFiled.getInt(field) and Modifier.FINAL.inv())
+    var tobeSearchMethodClass: Class<*>? = containerClass
 
-            field.set(classObj, newValue)
-            return true
+    while (tobeSearchMethodClass != null) {
+
+        tobeSearchMethodClass.declaredFields.forEach { field ->
+            if (field.name == propertyName) {
+                field.isAccessible = true
+                val modifyFiled = field.javaClass.getDeclaredField("modifiers")
+                modifyFiled.isAccessible = true
+                modifyFiled.setInt(field, modifyFiled.getInt(field) and Modifier.FINAL.inv())
+
+                field.set(classObj, newValue)
+                return true
+            }
         }
+
+        tobeSearchMethodClass = tobeSearchMethodClass.superclass
     }
     return false
 }
@@ -83,44 +98,51 @@ fun changeTopPropertyValueByName(otherCallableReference: CallableReference, prop
         throw IllegalArgumentException("No such property 'jClass'")
     }
 
-    containerClass.declaredFields.forEach { field ->
-        if (field.name == propertyName) {
-            field.isAccessible = true
-            val modifyFiled = field.javaClass.getDeclaredField("modifiers")
-            modifyFiled.isAccessible = true
-            modifyFiled.setInt(field, modifyFiled.getInt(field) and Modifier.FINAL.inv())
-            modifyFiled.setInt(field, modifyFiled.getInt(field) and Modifier.PRIVATE.inv())
-            /**
-             * top property(package property) should be static in java level
-             * or throw an exception
-             * */
-            val clazz = when (field.type) {
-                Int::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticIntegerFieldAccessorImpl")
-                Long::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticLongFieldAccessorImpl")
-                Double::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticDoubleFieldAccessorImpl")
-                Float::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticFloatFieldAccessorImpl")
-                Boolean::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticBooleanFieldAccessorImpl")
-                else -> Class.forName("sun.reflect.UnsafeQualifiedStaticObjectFieldAccessorImpl")
-            }
-            val constructor = clazz.declaredConstructors[0]
-            constructor.isAccessible = true
+    var tobeSearchMethodClass: Class<*>? = containerClass
 
-            val customAccess = constructor.newInstance(field, false)
+    while (tobeSearchMethodClass != null) {
 
-            field.javaClass.declaredMethods.forEach { method ->
-                if (method.name == "setFieldAccessor") {
-                    method.isAccessible = true
-
-                    method.invoke(field, customAccess, true)
+        tobeSearchMethodClass.declaredFields.forEach { field ->
+            if (field.name == propertyName) {
+                field.isAccessible = true
+                val modifyFiled = field.javaClass.getDeclaredField("modifiers")
+                modifyFiled.isAccessible = true
+                modifyFiled.setInt(field, modifyFiled.getInt(field) and Modifier.FINAL.inv())
+                modifyFiled.setInt(field, modifyFiled.getInt(field) and Modifier.PRIVATE.inv())
+                /**
+                 * top property(package property) should be static in java level
+                 * or throw an exception
+                 * */
+                val clazz = when (field.type) {
+                    Int::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticIntegerFieldAccessorImpl")
+                    Long::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticLongFieldAccessorImpl")
+                    Double::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticDoubleFieldAccessorImpl")
+                    Float::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticFloatFieldAccessorImpl")
+                    Boolean::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticBooleanFieldAccessorImpl")
+                    else -> Class.forName("sun.reflect.UnsafeQualifiedStaticObjectFieldAccessorImpl")
                 }
+                val constructor = clazz.declaredConstructors[0]
+                constructor.isAccessible = true
+
+                val customAccess = constructor.newInstance(field, false)
+
+                field.javaClass.declaredMethods.forEach { method ->
+                    if (method.name == "setFieldAccessor") {
+                        method.isAccessible = true
+
+                        method.invoke(field, customAccess, true)
+                    }
+                }
+                if (Modifier.isStatic(field.modifiers)) {
+                    field.set(null, newValue)
+                } else {
+                    throw IllegalStateException("It is not a top property : $propertyName")
+                }
+                return
             }
-            if (Modifier.isStatic(field.modifiers)) {
-                field.set(null, newValue)
-            } else {
-                throw IllegalStateException("It is not a top property : $propertyName")
-            }
-            return
         }
+
+        tobeSearchMethodClass = tobeSearchMethodClass.superclass
     }
     throw IllegalArgumentException("Can't find the property named :$propertyName in the same file with ${otherCallableReference.name}")
 }
@@ -132,67 +154,74 @@ fun changeTopPropertyValueByName(otherCallableReference: CallableReference, prop
 fun <R> changeClassPropertyValueByNameIgnoreType(classObj: Any, propertyName: String, newValue: R): Boolean {
     val containerClass: Class<*> = classObj::class.java
 
-    containerClass.declaredFields.forEach { field ->
-        if (field.name == propertyName) {
-            field.isAccessible = true
-            val modifyFiled = field.javaClass.getDeclaredField("modifiers")
-            modifyFiled.isAccessible = true
-            modifyFiled.setInt(field, modifyFiled.getInt(field) and Modifier.FINAL.inv())
+    var tobeSearchMethodClass: Class<*>? = containerClass
 
-            changeClassPropertyValueByName(field, "type", (newValue as Any)::class.java)
+    while (tobeSearchMethodClass != null) {
+
+        tobeSearchMethodClass.declaredFields.forEach { field ->
+            if (field.name == propertyName) {
+                field.isAccessible = true
+                val modifyFiled = field.javaClass.getDeclaredField("modifiers")
+                modifyFiled.isAccessible = true
+                modifyFiled.setInt(field, modifyFiled.getInt(field) and Modifier.FINAL.inv())
+
+                changeClassPropertyValueByName(field, "type", (newValue as Any)::class.java)
 
 
-            val root = getClassPropertyValueByName(field, "root")
-            root?.let {
-                changeClassPropertyValueByName(root, "type", (newValue as Any)::class.java)
-            }
-            val clazz =
-                if (Modifier.isStatic(field.modifiers)) {
-                    when ((newValue as Any)::class.java) {
-                        Int::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticIntegerFieldAccessorImpl")
-                        Int::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedStaticIntegerFieldAccessorImpl")
-                        Long::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticLongFieldAccessorImpl")
-                        Int::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedStaticLongFieldAccessorImpl")
-                        Double::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticDoubleFieldAccessorImpl")
-                        Double::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedStaticDoubleFieldAccessorImpl")
-                        Float::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticFloatFieldAccessorImpl")
-                        Float::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedStaticFloatFieldAccessorImpl")
-                        Boolean::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticBooleanFieldAccessorImpl")
-                        Boolean::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedStaticBooleanFieldAccessorImpl")
-                        else -> Class.forName("sun.reflect.UnsafeQualifiedStaticObjectFieldAccessorImpl")
-                    }
-                } else {
-                    when ((newValue as Any)::class.java) {
-                        Int::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedIntegerFieldAccessorImpl")
-                        Int::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedIntegerFieldAccessorImpl")
-                        Long::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedLongFieldAccessorImpl")
-                        Int::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedLongFieldAccessorImpl")
-                        Double::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedDoubleFieldAccessorImpl")
-                        Double::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedDoubleFieldAccessorImpl")
-                        Float::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedFloatFieldAccessorImpl")
-                        Float::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedFloatFieldAccessorImpl")
-                        Boolean::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedBooleanFieldAccessorImpl")
-                        Boolean::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedBooleanFieldAccessorImpl")
-                        else -> Class.forName("sun.reflect.UnsafeQualifiedObjectFieldAccessorImpl")
-                    }
-
+                val root = getClassPropertyValueByName(field, "root")
+                root?.let {
+                    changeClassPropertyValueByName(root, "type", (newValue as Any)::class.java)
                 }
-            val constructor = clazz.declaredConstructors[0]
-            constructor.isAccessible = true
+                val clazz =
+                        if (Modifier.isStatic(field.modifiers)) {
+                            when ((newValue as Any)::class.java) {
+                                Int::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticIntegerFieldAccessorImpl")
+                                Int::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedStaticIntegerFieldAccessorImpl")
+                                Long::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticLongFieldAccessorImpl")
+                                Int::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedStaticLongFieldAccessorImpl")
+                                Double::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticDoubleFieldAccessorImpl")
+                                Double::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedStaticDoubleFieldAccessorImpl")
+                                Float::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticFloatFieldAccessorImpl")
+                                Float::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedStaticFloatFieldAccessorImpl")
+                                Boolean::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedStaticBooleanFieldAccessorImpl")
+                                Boolean::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedStaticBooleanFieldAccessorImpl")
+                                else -> Class.forName("sun.reflect.UnsafeQualifiedStaticObjectFieldAccessorImpl")
+                            }
+                        } else {
+                            when ((newValue as Any)::class.java) {
+                                Int::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedIntegerFieldAccessorImpl")
+                                Int::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedIntegerFieldAccessorImpl")
+                                Long::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedLongFieldAccessorImpl")
+                                Int::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedLongFieldAccessorImpl")
+                                Double::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedDoubleFieldAccessorImpl")
+                                Double::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedDoubleFieldAccessorImpl")
+                                Float::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedFloatFieldAccessorImpl")
+                                Float::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedFloatFieldAccessorImpl")
+                                Boolean::class.javaPrimitiveType -> Class.forName("sun.reflect.UnsafeQualifiedBooleanFieldAccessorImpl")
+                                Boolean::class.javaObjectType -> Class.forName("sun.reflect.UnsafeQualifiedBooleanFieldAccessorImpl")
+                                else -> Class.forName("sun.reflect.UnsafeQualifiedObjectFieldAccessorImpl")
+                            }
 
-            val customAccess = constructor.newInstance(field, false)
-            field.javaClass.declaredMethods.forEach { method ->
-                if (method.name == "setFieldAccessor") {
-                    method.isAccessible = true
+                        }
+                val constructor = clazz.declaredConstructors[0]
+                constructor.isAccessible = true
 
-                    method.invoke(field, customAccess, true)
+                val customAccess = constructor.newInstance(field, false)
+                field.javaClass.declaredMethods.forEach { method ->
+                    if (method.name == "setFieldAccessor") {
+                        method.isAccessible = true
+
+                        method.invoke(field, customAccess, true)
+                    }
                 }
+                field.set(classObj, newValue)
+
+
+                return true
             }
-            field.set(classObj, newValue)
-
-
-            return true
         }
+
+        tobeSearchMethodClass = tobeSearchMethodClass.superclass
     }
     return false
 }
@@ -203,12 +232,18 @@ fun <R> changeClassPropertyValueByNameIgnoreType(classObj: Any, propertyName: St
 fun getClassPropertyValueByName(classObj: Any, propertyName: String): Any? {
     val containerClass: Class<*> = classObj::class.java
 
-    containerClass.declaredFields.forEach { field ->
-        if (field.name == propertyName) {
-            field.isAccessible = true
+    var tobeSearchMethodClass: Class<*>? = containerClass
 
-            return field.get(classObj)
+    while (tobeSearchMethodClass != null) {
+
+        tobeSearchMethodClass.declaredFields.forEach { field ->
+            if (field.name == propertyName) {
+                field.isAccessible = true
+
+                return field.get(classObj)
+            }
         }
+        tobeSearchMethodClass = tobeSearchMethodClass.superclass
     }
     return null
 }
@@ -227,21 +262,30 @@ fun getTopPropertyValueByName(otherCallableReference: CallableReference, propert
         throw IllegalArgumentException("No such property 'jClass'")
     }
 
-    containerClass.declaredFields.forEach { field ->
-        if (field.name == propertyName) {
-            field.isAccessible = true
+    var tobeSearchMethodClass: Class<*>? = containerClass
 
-            /**
-             * top property(package property) should be static in java level
-             * or throw an exception
-             * */
-            if (Modifier.isStatic(field.modifiers)) {
-                return field.get(null)
-            } else {
-                throw IllegalStateException("It is not a top property : $propertyName")
+    while (tobeSearchMethodClass != null) {
+
+        tobeSearchMethodClass.declaredFields.forEach { field ->
+
+            if (field.name == propertyName) {
+                field.isAccessible = true
+
+                /**
+                 * top property(package property) should be static in java level
+                 * or throw an exception
+                 * */
+                if (Modifier.isStatic(field.modifiers)) {
+                    return field.get(null)
+                } else {
+                    throw IllegalStateException("It is not a top property : $propertyName")
+                }
             }
         }
+
+        tobeSearchMethodClass = tobeSearchMethodClass.superclass
     }
+
     throw IllegalArgumentException("Can't find the property named :$propertyName in the same file with ${otherCallableReference.name}")
 }
 
@@ -251,25 +295,34 @@ fun getTopPropertyValueByName(otherCallableReference: CallableReference, propert
 fun invokeClassMethodByMethodName(classObj: Any, methodName: String, vararg methodArgs: Any?): Any? {
     val containerClass: Class<*> = classObj::class.java
 
-    containerClass.declaredMethods.forEach { method ->
-        if (method.name == methodName && method.parameterTypes.size == methodArgs.size) {
-            method.isAccessible = true
-            val modifyFiled = method.javaClass.getDeclaredField("modifiers")
-            modifyFiled.isAccessible = true
-            modifyFiled.setInt(method, modifyFiled.getInt(method) and Modifier.FINAL.inv())
+    var tobeSearchMethodClass: Class<*>? = containerClass
 
-            try {
-                if (methodArgs.isNotEmpty()) {
+    while (tobeSearchMethodClass != null) {
 
-                    return method.invoke(classObj, *methodArgs)
-                } else {
-                    return method.invoke(classObj)
+        tobeSearchMethodClass.declaredMethods.forEach { method ->
+            if (method.name == methodName && method.parameterTypes.size == methodArgs.size) {
+                method.isAccessible = true
+                val modifyFiled = method.javaClass.getDeclaredField("modifiers")
+                modifyFiled.isAccessible = true
+                modifyFiled.setInt(method, modifyFiled.getInt(method) and Modifier.FINAL.inv())
+
+                try {
+                    if (methodArgs.isNotEmpty()) {
+
+                        return method.invoke(classObj, *methodArgs)
+                    } else {
+                        return method.invoke(classObj)
+                    }
+                } catch (e: IllegalArgumentException) {
+                    return@forEach
                 }
-            } catch (e: Exception) {
-                return@forEach
             }
         }
+
+        tobeSearchMethodClass = tobeSearchMethodClass.superclass
     }
+
+
     throw IllegalArgumentException("Can't find the method named :$methodName with args ${methodArgs.toList().toString()} in the classObj : $classObj")
 }
 
@@ -277,9 +330,9 @@ fun invokeClassMethodByMethodName(classObj: Any, methodName: String, vararg meth
  * invoke a method by name from a kotlin file(not in any kotlin class),no matter whether the property is public ,private or internal
  */
 fun invokeTopMethodByMethodName(
-    otherCallableReference: CallableReference,
-    methodName: String,
-    vararg methodArgs: Any?
+        otherCallableReference: CallableReference,
+        methodName: String,
+        vararg methodArgs: Any?
 ): Any? {
     val owner = otherCallableReference.owner
     val containerClass: Class<*>
@@ -289,23 +342,30 @@ fun invokeTopMethodByMethodName(
     } catch (e: Exception) {
         throw IllegalArgumentException("No such property 'jClass'")
     }
-    containerClass.declaredMethods.forEach { method ->
-        if (method.name == methodName && method.parameterTypes.size == methodArgs.size) {
-            method.isAccessible = true
-            val modifyFiled = method.javaClass.getDeclaredField("modifiers")
-            modifyFiled.isAccessible = true
-            modifyFiled.setInt(method, modifyFiled.getInt(method) and Modifier.FINAL.inv())
 
-            try {
-                if (methodArgs.isNotEmpty()) {
-                    return method.invoke(null, *methodArgs)
-                } else {
-                    return method.invoke(null)
+    var tobeSearchMethodClass: Class<*>? = containerClass
+
+    while (tobeSearchMethodClass != null) {
+
+        tobeSearchMethodClass.declaredMethods.forEach { method ->
+            if (method.name == methodName && method.parameterTypes.size == methodArgs.size) {
+                method.isAccessible = true
+                val modifyFiled = method.javaClass.getDeclaredField("modifiers")
+                modifyFiled.isAccessible = true
+                modifyFiled.setInt(method, modifyFiled.getInt(method) and Modifier.FINAL.inv())
+
+                try {
+                    if (methodArgs.isNotEmpty()) {
+                        return method.invoke(null, *methodArgs)
+                    } else {
+                        return method.invoke(null)
+                    }
+                } catch (e: IllegalArgumentException) {
+                    return@forEach
                 }
-            } catch (e: Exception) {
-                return@forEach
             }
         }
+        tobeSearchMethodClass = tobeSearchMethodClass.superclass
     }
     throw IllegalArgumentException("Can't find the method named :$methodName with args ${methodArgs.toList().toString()} in the same file with ${otherCallableReference.name}")
 
